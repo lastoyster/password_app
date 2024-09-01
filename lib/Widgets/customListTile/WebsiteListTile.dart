@@ -1,9 +1,9 @@
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:pm/Services/services.dart';
-import 'package:pm/UI/ui.dart';
-import 'package:pm/Widgets/customListTile/customListTile.dart';
+import '../../Services/services.dart';
+import '../../UI/ui.dart';
+import '../../Widgets/customListTile/customListTile.dart';
 
 class WebsiteListTile extends StatelessWidget {
   final bool isWarning;

@@ -1,194 +1,41 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:password_app/UI/ui.dart';
-import 'package:password_app/Widgets/widgets.dart';
+import '../UI/ui.dart';
 
-class Picker extends StatefulWidget {
-  final int id;
-  final bool filled;
-  final bool height;
-  final String? hint;
-  final String value;
-  final String title;
-  final Function pick;
-  final int? pickedOption;
-  final List<String> options;
-  final beforePicking;
+class CustomContainer extends StatelessWidget {
+  final Widget child;
+  final Color borderColor;
+  final Color backgroundColor;
+  final EdgeInsetsGeometry padding;
+  final double borderRadius;
+  final List<BoxShadow> boxShadow;
 
-  const Picker({
-    required this.id,
-    required this.title,
-    required this.pick,
-    required this.options,
-    this.height = false,
-    this.filled = false,
-    this.value = '',
-    this.pickedOption,
-    this.hint,
-    this.beforePicking,
-  });
-
-  @override
-  _PickerState createState() => _PickerState();
-}
-
-class _PickerState extends State<Picker> {
-  void showOptions() {
-    List<Widget> widgets = [
-      Text(
-        widget.title,
-        style: const TextStyle(
-          color: Palette.primaryDark,
-          fontSize: Font.h3,
-        ),
+  const CustomContainer({
+    required this.child,
+    this.borderColor = Palette.secondaryLight,
+    this.backgroundColor = Palette.secondaryLight,
+    this.padding = const EdgeInsets.symmetric(horizontal: 8.0),
+    this.borderRadius = 8.0,
+    this.boxShadow = const [
+      BoxShadow(
+        offset: Offset(0.0, 2.0),
+        blurRadius: 4.0,
+        color: Color(0x25000000),
       ),
-      Spacers.h32,
-    ];
-    widgets.addAll(
-      List.generate(widget.options.length, (option) {
-        double padding = (option == widget.options.length - 1 ? 0 : 16);
-        return GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            Navigator.pop(context);
-            widget.pick(widget.id, option);
-          },
-          child: Padding(
-            padding: EdgeInsets.only(bottom: padding),
-            child: CustomOption(
-              option: widget.options[option],
-              picked: widget.pickedOption == option,
-            ),
-          ),
-        );
-      }),
-    );
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return SizedBox(
-          height: 105.0 +
-              36.0 * widget.options.length +
-              (widget.height ? 30.0 : 0.0),
-          child: Container(
-            padding: const EdgeInsets.all(20.0),
-            decoration: const BoxDecoration(
-              color: Palette.primaryLight,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: widgets,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    String value = (widget.value != '' ? ' - ' + widget.value : '');
-    Color color = (value == '' ? Palette.secondaryDark : Palette.primaryDark);
-    return GestureDetector(
-      onTap: () async {
-        if (widget.beforePicking != null) await widget.beforePicking();
-        showOptions();
-      },
-      child: CustomContainer(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            AutoSizeText(
-              widget.hint == null ? widget.title + value : widget.hint!,
-              style: TextStyle(
-                color: color,
-                fontSize: Font.h4,
-              ),
-            ),
-            Icon(
-              FontAwesome5.caret_right,
-              color: color,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomOption extends StatelessWidget {
-  final String option;
-  final bool picked;
-
-  const CustomOption({super.key, 
-    required this.option,
-    this.picked = false,
+    ],
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          option,
-          style: const TextStyle(
-            color: Palette.primaryDark,
-            fontSize: Font.h4,
-          ),
-        ),
-        dot(),
-      ],
+    return Container(
+      height: 49.0,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(color: borderColor),
+        boxShadow: boxShadow,
+      ),
+      child: child,
     );
-  }
-
-  Widget dot() {
-    if (!picked) {
-      return Container(
-        height: 20.0,
-        width: 20.0,
-        decoration: BoxDecoration(
-          color: Palette.primaryLight,
-          border: Border.all(
-            width: 2.0,
-            color: Palette.secondaryDark,
-          ),
-          shape: BoxShape.circle,
-        ),
-      );
-    } else {
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            height: 20.0,
-            width: 20.0,
-            decoration: BoxDecoration(
-              color: Palette.primaryLight,
-              border: Border.all(
-                width: 2.0,
-                color: Palette.primaryDark,
-              ),
-              shape: BoxShape.circle,
-            ),
-          ),
-          Container(
-            height: 12.0,
-            width: 12.0,
-            decoration: const BoxDecoration(
-              color: Palette.primaryDark,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ],
-      );
-    }
   }
 }

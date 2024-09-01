@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:pm/UI/ui.dart';
-import 'package:pm/Widgets/customListTile/customListTile.dart';
+import '../../UI/ui.dart';
+import '../../Widgets/customListTile/customListTile.dart';
 
 class AccountListTile extends StatelessWidget {
   final emailName;

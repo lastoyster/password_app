@@ -3,7 +3,7 @@ export 'BaseScaffold.dart';
 export 'Header.dart';
 export 'FAB.dart';
 export 'Warning.dart';
-export 'OtherOption.dart';
+export 'OtherOptions.dart';
 export 'Loading.dart';
 export 'NoInternet.dart';
 export 'SheetBar.dart';

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:password_app/UI/ui.dart';
-import 'package:password_app/Widgets/widgets.dart';
+import '/UI/ui.dart';
+import '/Widgets/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 
 class BaseScaffold extends StatefulWidget {
@@ -18,7 +18,7 @@ class BaseScaffold extends StatefulWidget {
   final List<Widget> widgets;
   final Function? appBarAction;
 
-  BaseScaffold({
+  const BaseScaffold({
     required this.header,
     required this.widgets,
     this.appBarIcon = FontAwesome5.chevron_left,
@@ -35,16 +35,17 @@ class BaseScaffold extends StatefulWidget {
 }
 
 class _BaseScaffoldState extends State<BaseScaffold> {
-  GlobalKey<ScaffoldState> drawerKey = GlobalKey();
-  late StreamSubscription<ConnectivityResult> subscription;
-
+  final GlobalKey<ScaffoldState> drawerKey = GlobalKey();
+  late final StreamSubscription<ConnectivityResult> subscription;
+  late final KeyboardVisibilityController keyboardVisibilityController;
   bool internetConnection = true;
   bool keyboardVisibility = false;
 
   @override
   void initState() {
     super.initState();
-    var keyboardVisibilityController = KeyboardVisibilityController();
+
+    keyboardVisibilityController = KeyboardVisibilityController();
     keyboardVisibilityController.onChange.listen((bool visible) {
       if (mounted) {
         setState(() {
@@ -52,83 +53,34 @@ class _BaseScaffoldState extends State<BaseScaffold> {
         });
       }
     });
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
+
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       setState(() {
         internetConnection = result != ConnectivityResult.none;
       });
     });
+
     checkConnectivity();
   }
 
-  void checkConnectivity() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+  Future<void> checkConnectivity() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
     setState(() {
       internetConnection = connectivityResult != ConnectivityResult.none;
     });
   }
 
-  dispose() {
+  @override
+  void dispose() {
     subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> slivers = [];
-    slivers.addAll(
-      [
-        SliverAppBar(
-          backgroundColor: Palette.primaryLight,
-          brightness: Brightness.light,
-          leadingWidth: 24.0,
-          leading: GestureDetector(
-            onTap: () {
-              if (widget.appBarIcon == FontAwesome5.times) {
-                SystemNavigator.pop();
-              } else if (widget.drawer == null) {
-                if (widget.appBarAction == null) {
-                  Navigator.pop(context);
-                } else {
-                  widget.appBarAction!();
-                }
-              } else {
-                drawerKey.currentState!.openDrawer();
-              }
-            },
-            child: Icon(
-              widget.appBarIcon,
-              color: Palette.primaryDark,
-            ),
-          ),
-        ),
-        Header(
-          header: widget.header,
-          subHeader: widget.subHeader,
-        ),
-        SliverToBoxAdapter(child: Spacers.h32),
-      ],
-    );
-    for (Widget widget in widget.widgets) {
-      slivers.addAll(
-        [
-          SliverToBoxAdapter(
-            child: widget,
-          ),
-          SliverToBoxAdapter(child: Spacers.h16),
-        ],
-      );
-    }
-    if (widget.withBottomSpace) {
-      slivers.add(
-        SliverToBoxAdapter(child: Spacers.customSpacer(100.0)),
-      );
-    }
-
     return SafeArea(
       child: !internetConnection
-          ? NoInternet()
+          ? const NoInternet()
           : Scaffold(
               key: drawerKey,
               drawer: widget.drawer,
@@ -137,7 +89,7 @@ class _BaseScaffoldState extends State<BaseScaffold> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
                     child: CustomScrollView(
-                      slivers: slivers,
+                      slivers: buildSlivers(),
                     ),
                   ),
                   getBottomWidget(),
@@ -147,18 +99,61 @@ class _BaseScaffoldState extends State<BaseScaffold> {
     );
   }
 
+  List<Widget> buildSlivers() {
+    List<Widget> slivers = [
+      SliverAppBar(
+        backgroundColor: Palette.primaryLight,
+        leadingWidth: 24.0,
+        leading: GestureDetector(
+          onTap: handleAppBarTap,
+          child: Icon(
+            widget.appBarIcon,
+            color: Palette.primaryDark,
+          ),
+        ),
+      ),
+      Header(
+        header: widget.header,
+        subHeader: widget.subHeader,
+      ),
+      const SliverToBoxAdapter(child: Spacers.h32),
+    ];
+
+    slivers.addAll(widget.widgets.map((widget) => SliverToBoxAdapter(child: widget)).toList());
+
+    if (widget.withBottomSpace) {
+      slivers.add(const SliverToBoxAdapter(child: Spacers.customSpacer(100.0)));
+    }
+
+    return slivers;
+  }
+
+  void handleAppBarTap() {
+    if (widget.appBarIcon == FontAwesome5.times) {
+      SystemNavigator.pop();
+    } else if (widget.drawer == null) {
+      if (widget.appBarAction == null) {
+        Navigator.pop(context);
+      } else {
+        widget.appBarAction!();
+      }
+    } else {
+      drawerKey.currentState!.openDrawer();
+    }
+  }
+
   Widget getBottomWidget() {
     if (widget.isLoading) {
       return Container(
         alignment: Alignment.bottomCenter,
         margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
-        child: Loading(),
+        child:  Loading(),
       );
     } else if (widget.bottom != null && !keyboardVisibility) {
       return Container(
         alignment: Alignment.bottomCenter,
         margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
-        child: widget.bottom,
+        child: widget.bottom!,
       );
     } else {
       return const SizedBox();

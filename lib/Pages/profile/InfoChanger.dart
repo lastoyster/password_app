@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'index.dart';
-import '../UI/ui.dart';
+import '/UI/ui.dart';
 
 class InfoChanger extends StatelessWidget {
   final String infoName;
@@ -25,12 +25,12 @@ class InfoChanger extends StatelessWidget {
           children: [
             Text(
               'Change $infoName',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Palette.primaryDark,
                 fontSize: Font.h4,
               ),
             ),
-            Icon(
+            const Icon(
               FontAwesome5.caret_right,
               size: Font.h4,
             ),
