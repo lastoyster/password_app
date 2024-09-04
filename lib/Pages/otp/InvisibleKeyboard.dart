@@ -19,9 +19,9 @@ class InvisibleKeyboard extends StatelessWidget {
         margin: EdgeInsets.only(right: size.width * 0.85),
         child: TextField(
           onChanged: onChange,
-          style: TextStyle(fontSize: 1.0),
-          decoration: InputDecoration(
-            counter: Offstage(),
+          style: const TextStyle(fontSize: 1.0),
+          decoration: const InputDecoration(
+            counter: const Offstage(),
             border: InputBorder.none,
           ),
           maxLength: 6,

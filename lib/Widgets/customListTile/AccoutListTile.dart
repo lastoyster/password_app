@@ -24,7 +24,7 @@ class AccountListTile extends StatelessWidget {
     return Expanded(
       child: AutoSizeText(
         emailName,
-        style: TextStyle(
+        style: const TextStyle(
           color: Palette.primaryDark,
           fontSize: Font.h4,
         ),

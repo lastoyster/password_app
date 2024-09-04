@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pm/Models/models.dart';
+import '../../Models/models.dart';
 import 'package:provider/provider.dart';
-import 'package:pm/Widgets/widgets.dart';
-import 'package:pm/Services/services.dart';
-import 'package:pm/Pages/search/index.dart';
+import '../../Widgets/widgets.dart';
+import '../../Services/services.dart';
+import '../../Pages/search/index.dart';
 
 class Search extends StatefulWidget {
   static final String id = 'Search';

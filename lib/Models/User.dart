@@ -1,10 +1,9 @@
-
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:pm/Models/models.dart';
-import 'package:pm/Services/services.dart';
+import '/Models/models.dart';
+import '/Services/services.dart';
 
 class User extends ChangeNotifier {
   int? id;

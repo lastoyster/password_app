@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
-import 'index.dart';
-import '../../Services/index.dart';
-import '../../UI/ui.dart';
-import '../../../Widgets/widgets.dart';
+import 'package:pm/Pages/profile/profile.dart';
+import 'package:pm/Services/services.dart';
+import 'package:pm/UI/ui.dart';
+import 'package:pm/Widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';

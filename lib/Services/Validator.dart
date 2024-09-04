@@ -6,17 +6,17 @@ class Validator {
   static const phonePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
 
   static isUsername(String text) {
-    return text.length > 0;
+    return text.isNotEmpty;
   }
 
   static isEmail(String text) {
-    if (text.length == 0) return false;
+    if (text.isEmpty) return false;
     if (text[text.length - 1] == ' ') return false;
     return RegExp(emailPattern).hasMatch(text);
   }
 
   static isWebsite(String text) {
-    if (text.length == 0) return false;
+    if (text.isEmpty) return false;
     if (text[text.length - 1] == ' ') return false;
     return RegExp(websitePattern).hasMatch(text);
   }
@@ -31,6 +31,6 @@ class Validator {
   }
 
   static isHint(String text) {
-    return text.length > 0;
+    return text.isNotEmpty;
   }
 }
